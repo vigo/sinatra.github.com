@@ -1,4 +1,6 @@
 # encoding: utf-8
+require 'bundler/setup'
+
 require 'rake/clean'
 require 'rdoc'
 require 'rdoc/encoding'

@@ -19,10 +19,14 @@ Make sure you have the `bundler` gem installed on your machine:
 Install dependencies:
 
     $ bundle install
+    # or
+    $ bundle install --path=vendor/bundle
 
 Run the test server:
 
     $ rake server
+    # or
+    $ bundle exec rake server
 
 Changes are immediately available at:
 
