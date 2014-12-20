@@ -299,33 +299,41 @@ get <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710
 </div>
 </div>
 
-<p>By the way, unless you disable the path traversal attack protection (see below),
-the request path might be modified before matching against your routes.</p>
+<p>
+    Eğer, <strong>path traversal attack protection</strong> özelliğini kapatmazsanız,
+    sizin paterninizi yakalamadan önce <strong>request path</strong> değişikliğe
+    uğramış olabilir!
+</p>
 
 <a name='Conditions'></a>
-<h2>Conditions</h2>
+<h2>Koşullar</h2>
 
-<p>Routes may include a variety of matching conditions, such as the user agent:</p>
+<p>
+    Route tanımlamalarını yaparken belli koşullara sağlamasını da isteyebilirsiniz.
+    Örneğin <strong>user agent</strong>’a göre yakalama yapabilirsiniz:
+</p>
 
 <div>
 <div class="CodeRay">
   <div class="code"><pre>get <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">/foo</span><span style="color:#710">'</span></span>, <span style="color:#A60">:agent</span> =&gt; <span style="background-color:hsla(300,100%,50%,0.06)"><span style="color:#404">/</span><span style="color:#808">Songbird (</span><span style="color:#D20">\d</span><span style="color:#D20">\.</span><span style="color:#D20">\d</span><span style="color:#808">)[</span><span style="color:#D20">\d</span><span style="color:#D20">\/</span><span style="color:#808">]*?</span><span style="color:#404">/</span></span> <span style="color:#080;font-weight:bold">do</span>
-  <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">You're using Songbird version </span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span>params[<span style="color:#A60">:agent</span>][<span style="color:#00D">0</span>]<span style="font-weight:bold;color:#666">}</span></span><span style="color:#710">"</span></span>
+  <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Songbird kullanıyorsunuz ve versiyonunuz </span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span>params[<span style="color:#A60">:agent</span>][<span style="color:#00D">0</span>]<span style="font-weight:bold;color:#666">}</span></span><span style="color:#710">"</span></span>
 <span style="color:#080;font-weight:bold">end</span>
 
 get <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">/foo</span><span style="color:#710">'</span></span> <span style="color:#080;font-weight:bold">do</span>
-  <span style="color:#777"># Matches non-songbird browsers</span>
+  <span style="color:#777"># Songbird olmayan tarayıcıları yakalar</span>
 <span style="color:#080;font-weight:bold">end</span>
 </pre></div>
 </div>
 </div>
 
-<p>Other available conditions are <code>host_name</code> and <code>provides</code>:</p>
+<p>
+    Diğer mevcut koşullar ise <code>host_name</code> ve <code>provides</code>:
+</p>
 
 <div>
 <div class="CodeRay">
   <div class="code"><pre>get <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">/</span><span style="color:#710">'</span></span>, <span style="color:#A60">:host_name</span> =&gt; <span style="background-color:hsla(300,100%,50%,0.06)"><span style="color:#404">/</span><span style="color:#808">^admin</span><span style="color:#D20">\.</span><span style="color:#404">/</span></span> <span style="color:#080;font-weight:bold">do</span>
-  <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Admin Area, Access denied!</span><span style="color:#710">"</span></span>
+  <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Admin bölümü!, Giriş yasak!</span><span style="color:#710">"</span></span>
 <span style="color:#080;font-weight:bold">end</span>
 
 get <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">/</span><span style="color:#710">'</span></span>, <span style="color:#A60">:provides</span> =&gt; <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">html</span><span style="color:#710">'</span></span> <span style="color:#080;font-weight:bold">do</span>
@@ -339,69 +347,70 @@ get <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710
 </div>
 </div>
 
-<p>You can easily define your own conditions:</p>
+<p>Kendi koşullarınızı da çok kolay bir şekilde tanımlayabilirsiniz:</p>
 
 <div>
 <div class="CodeRay">
-  <div class="code"><pre>set(<span style="color:#A60">:probability</span>) { |value| condition { rand &lt;= value } }
+  <div class="code"><pre>set(<span style="color:#A60">:ihtimal</span>) { |value| condition { rand &lt;= value } }
 
-get <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">/win_a_car</span><span style="color:#710">'</span></span>, <span style="color:#A60">:probability</span> =&gt; <span style="color:#60E">0.1</span> <span style="color:#080;font-weight:bold">do</span>
-  <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">You won!</span><span style="color:#710">"</span></span>
+get <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">/araba_kazan</span><span style="color:#710">'</span></span>, <span style="color:#A60">:ihtimal</span> =&gt; <span style="color:#60E">0.1</span> <span style="color:#080;font-weight:bold">do</span>
+  <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Kazandınız!</span><span style="color:#710">"</span></span>
 <span style="color:#080;font-weight:bold">end</span>
 
-get <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">/win_a_car</span><span style="color:#710">'</span></span> <span style="color:#080;font-weight:bold">do</span>
-  <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Sorry, you lost.</span><span style="color:#710">"</span></span>
+get <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">/araba_kazan</span><span style="color:#710">'</span></span> <span style="color:#080;font-weight:bold">do</span>
+  <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Üzgünüm, kazanamadınız!.</span><span style="color:#710">"</span></span>
 <span style="color:#080;font-weight:bold">end</span>
 </pre></div>
 </div>
 </div>
 
-<p>For a condition that takes multiple values use a splat:</p>
+<p>Birden fazla parametre alan durumlar için <strong>splat</strong> özelliğini kullanabilirsiniz:</p>
 
 <div>
 <div class="CodeRay">
-  <div class="code"><pre>set(<span style="color:#A60">:auth</span>) <span style="color:#080;font-weight:bold">do</span> |*roles|   <span style="color:#777"># &lt;- notice the splat here</span>
+  <div class="code"><pre>set(<span style="color:#A60">:izin</span>) <span style="color:#080;font-weight:bold">do</span> |*roller|   <span style="color:#777"># &lt;- splat burada kullanılıyor</span>
   condition <span style="color:#080;font-weight:bold">do</span>
-    <span style="color:#080;font-weight:bold">unless</span> logged_in? &amp;&amp; roles.any? {|role| current_user.in_role? role }
-      redirect <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">/login/</span><span style="color:#710">"</span></span>, <span style="color:#00D">303</span>
+    <span style="color:#080;font-weight:bold">unless</span> giris_basarilimi? &amp;&amp; roller.any? {|rol| aktif_kullanici.rol_uygunmu? rol }
+      redirect <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">/giris/</span><span style="color:#710">"</span></span>, <span style="color:#00D">303</span>
     <span style="color:#080;font-weight:bold">end</span>
   <span style="color:#080;font-weight:bold">end</span>
 <span style="color:#080;font-weight:bold">end</span>
 
-get <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">/my/account/</span><span style="color:#710">"</span></span>, <span style="color:#A60">:auth</span> =&gt; [<span style="color:#A60">:user</span>, <span style="color:#A60">:admin</span>] <span style="color:#080;font-weight:bold">do</span>
-  <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Your Account Details</span><span style="color:#710">"</span></span>
+get <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">/benim/hesabim/</span><span style="color:#710">"</span></span>, <span style="color:#A60">:izin</span> =&gt; [<span style="color:#A60">:user</span>, <span style="color:#A60">:admin</span>] <span style="color:#080;font-weight:bold">do</span>
+  <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Profil Bilgileriniz</span><span style="color:#710">"</span></span>
 <span style="color:#080;font-weight:bold">end</span>
 
-get <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">/only/admin/</span><span style="color:#710">"</span></span>, <span style="color:#A60">:auth</span> =&gt; <span style="color:#A60">:admin</span> <span style="color:#080;font-weight:bold">do</span>
-  <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Only admins are allowed here!</span><span style="color:#710">"</span></span>
+get <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">/sadece/admin/</span><span style="color:#710">"</span></span>, <span style="color:#A60">:izin</span> =&gt; <span style="color:#A60">:admin</span> <span style="color:#080;font-weight:bold">do</span>
+  <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Sadece Admin kullanıcılar için!</span><span style="color:#710">"</span></span>
 <span style="color:#080;font-weight:bold">end</span>
 </pre></div>
 </div>
 </div>
 
 <a name='Return%20Values'></a>
-<h2>Return Values</h2>
+<h2>Geri Dönen Değerler (Return Values)</h2>
 
-<p>The return value of a route block determines at least the response body passed
-on to the HTTP client, or at least the next middleware in the Rack stack.
-Most commonly, this is a string, as in the above examples. But other values are
-also accepted.</p>
+<p>
+    Route bloğundan geri dönen değer en azından, HTTP client’a geçilen
+    <strong>response body</strong>, ya da Rack katmanında bulunan bir
+    sonraki middleware’in çıktısı olmalıdır. Sonuçta gelen şey bir
+    String olup, diğer değerler de kabul edilebilir. Örnekleri
+    aşağıda görebilirsiniz.
+</p>
 
-<p>You can return any object that would either be a valid Rack response, Rack
-body object or HTTP status code:</p>
+<p>
+    Hatasız (valid) Rack response’ı, Rack body nesnesi ya da HTTP status kod’u
+    geri dönebilirsiniz.
+</p>
 
 <ul>
-<li>An Array with three elements: <code>[status (Fixnum), headers (Hash), response
-body (responds to #each)]</code>
-</li>
-  <li>An Array with two elements: <code>[status (Fixnum), response body (responds to
-#each)]</code>
-</li>
-  <li>An object that responds to <code>#each</code> and passes nothing but strings to
-the given block</li>
-  <li>A Fixnum representing the status code</li>
+<li>3 elemanı olan bir Array: <code>[status (Fixnum), headers (Hash), response body (#each metoduna cevap verebilen)]</code></li>
+  <li>2 elemanı olan bir Array: <code>[status (Fixnum), response body (#each metoduna cevap verebilen)]</code></li>
+  <li>String tipinde bloğa parametre geçen ve #each metoduna cevap verebilen bir nesne.</li>
+  <li>Fixnum tipinde, HTTP status kodunu temsil eden bir sayı (code).</li>
 </ul>
-<p>That way we can, for instance, easily implement a streaming example:</p>
+
+<p>Aşağıdaki örnekte Streamin nasıl yapılıyor görebilirsiniz:</p>
 
 <div>
 <div class="CodeRay">
@@ -416,24 +425,26 @@ get(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710
 </div>
 </div>
 
-<p>You can also use the <code>stream</code> helper method (described below) to reduce boiler
-plate and embed the streaming logic in the route.</p>
+<p>
+    Keza, aşağıda anlatılan <code>stream</code> yardımcı metodunu kullanarak, streaming mantığını route’larınızda kullanabilirsiniz.
+</p>
 
 <a name='Custom%20Route%20Matchers'></a>
-<h2>Custom Route Matchers</h2>
+<h2>Kendi Route Matcher’larınızı Tanımlayın!</h2>
 
-<p>As shown above, Sinatra ships with built-in support for using String patterns
-and regular expressions as route matches. However, it does not stop there. You
-can easily define your own matchers:</p>
+<p>
+    Yukarıda bahsettiğimiz gibi, Sinatra, String paternlerini kullanarak route matcher yapma özelliği ile birlikte gelir.
+    Eğer isterseniz, fonksiyonel olarak kendi tanımlayacağınız özel matcher’lar da yapmanız mümkün:
+</p>
 
 <div>
 <div class="CodeRay">
-  <div class="code"><pre><span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">AllButPattern</span>
-  <span style="color:#036;font-weight:bold">Match</span> = <span style="color:#036;font-weight:bold">Struct</span>.new(<span style="color:#A60">:captures</span>)
+  <div class="code"><pre><span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">OzelYakalama</span>
+  <span style="color:#036;font-weight:bold">Yakalanan</span> = <span style="color:#036;font-weight:bold">Struct</span>.new(<span style="color:#A60">:captures</span>)
 
   <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">initialize</span>(except)
     <span style="color:#33B">@except</span>   = except
-    <span style="color:#33B">@captures</span> = <span style="color:#036;font-weight:bold">Match</span>.new([])
+    <span style="color:#33B">@captures</span> = <span style="color:#036;font-weight:bold">Yakalanan</span>.new([])
   <span style="color:#080;font-weight:bold">end</span>
 
   <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">match</span>(str)
@@ -441,19 +452,18 @@ can easily define your own matchers:</p>
   <span style="color:#080;font-weight:bold">end</span>
 <span style="color:#080;font-weight:bold">end</span>
 
-<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">all_but</span>(pattern)
-  <span style="color:#036;font-weight:bold">AllButPattern</span>.new(pattern)
+<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">ozel_yakala</span>(pattern)
+  <span style="color:#036;font-weight:bold">OzelYakalama</span>.new(pattern)
 <span style="color:#080;font-weight:bold">end</span>
 
-get all_but(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">/index</span><span style="color:#710">"</span></span>) <span style="color:#080;font-weight:bold">do</span>
+get ozel_yakala(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">/index</span><span style="color:#710">"</span></span>) <span style="color:#080;font-weight:bold">do</span>
   <span style="color:#777"># ...</span>
 <span style="color:#080;font-weight:bold">end</span>
 </pre></div>
 </div>
 </div>
 
-<p>Note that the above example might be over-engineered, as it can also be
-expressed as:</p>
+<p>Not: Yukarıdaki örnek biraz fazla komplike/ileri-seviye olabilir, daha basit şekilde de kullanılabilir:</p>
 
 <div>
 <div class="CodeRay">
@@ -465,7 +475,9 @@ expressed as:</p>
 </div>
 </div>
 
-<p>Or, using negative look ahead:</p>
+<p>
+    Ya da, RegExp’deki <a href="http://www.regular-expressions.info/lookaround.html">negative look ahead</a> kullanılabilir:
+</p>
 
 <div>
 <div class="CodeRay">
@@ -477,30 +489,37 @@ expressed as:</p>
 </div>
 
 <a name='Static%20Files'></a>
-<h2>Static Files</h2>
+<h2>Statik Sunulan Dosyalar</h2>
 
-<p>Static files are served from the <code>./public</code> directory. You can specify
-a different location by setting the <code>:public_folder</code> option:</p>
+<p>
+    Statik olarak sunulan dosyalar <code>./public</code> dizini altına yerleştirilir. (Bu varsayılan ayarlardandır.)
+    Eğer başka bir dizin altından sunmak isterseniz <code>:public_folder</code> değerine atama yapmanız gerekir:
+</p>
 
 <div>
 <div class="CodeRay">
-  <div class="code"><pre>set <span style="color:#A60">:public_folder</span>, <span style="color:#036;font-weight:bold">File</span>.dirname(<span style="color:#069">__FILE__</span>) + <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">/static</span><span style="color:#710">'</span></span>
+  <div class="code"><pre>set <span style="color:#A60">:public_folder</span>, <span style="color:#036;font-weight:bold">File</span>.dirname(<span style="color:#069">__FILE__</span>) + <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">/statik_dosyalar</span><span style="color:#710">'</span></span>
 </pre></div>
 </div>
 </div>
 
-<p>Note that the public directory name is not included in the URL. A file
-<code>./public/css/style.css</code> is made available as
-<code>http://example.com/css/style.css</code>.</p>
+<p>
+    Unutmayın! Public (yani statik dosyların bulunduğu yer) dizin adı URL’e eklenmiyor!
+    <code>./public/css/style.css</code> dosyasına <code>http://example.com/css/style.css</code> gibi erişiliyor!
+</p>
 
-<p>Use the <code>:static_cache_control</code> setting (see below) to add
-<code>Cache-Control</code> header info.</p>
+<p>
+    <code>:static_cache_control</code> seçeneği ile <code>Cache-Control</code> header ayarlamaları yapabilirsiniz. (Örnekler aşağıda)
+</p>
 
 <a name='Views%20/%20Templates'></a>
-<h2>Views / Templates</h2>
+<h2>Şablonlar (Views / Templates)</h2>
 
-<p>Each template language is exposed via its own rendering method. These
-methods simply return a string:</p>
+<p>
+    Üreteceğiniz html’leri otomatize etmek için farklı farklı pek çok <strong>Template</strong> (Şablon) dilini
+    kullanabilirsiniz. Her dil kendi rendering (üretme) metodunu kullanır. Üretilen template’den String tipinde
+    değer döner.
+</p>
 
 <div>
 <div class="CodeRay">
@@ -511,10 +530,11 @@ methods simply return a string:</p>
 </div>
 </div>
 
-<p>This renders <code>views/index.erb</code>.</p>
+<p>Yukarıdaki kod <code>views/index.erb</code> dosyasını yani <strong>erb</strong> template’ini render eder.</p>
 
-<p>Instead of a template name, you can also just pass in the template content
-directly:</p>
+<p>
+    İsterseniz, template adı yerine direk içerik de kullanabilirsiniz:
+</p>
 
 <div>
 <div class="CodeRay">
@@ -526,7 +546,7 @@ directly:</p>
 </div>
 </div>
 
-<p>Templates take a second argument, the options hash:</p>
+<p>İkinci parametre opsiyonlar parametresidir ve Hash tipindedir:</p>
 
 <div>
 <div class="CodeRay">
@@ -537,11 +557,12 @@ directly:</p>
 </div>
 </div>
 
-<p>This will render <code>views/index.erb</code> embedded in the
-<code>views/post.erb</code> (default is <code>views/layout.erb</code>, if it exists).</p>
+<p>
+    <code>views/index.erb</code> dosyasını <code>views/post.erb</code> şablonunu kullanarak üretir.
+    Normalde varsayılan işem (default olarak) eğer varsa <code>views/layout.erb</code> dosyasını kullanarak üretmektir.
+</p>
 
-<p>Any options not understood by Sinatra will be passed on to the template
-engine:</p>
+<p>Sinatra’nın anlamadığı diğer tüm parametreler, template’a template değişkeni olarak aktarılır:</p>
 
 <div>
 <div class="CodeRay">
