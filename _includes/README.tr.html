@@ -573,7 +573,10 @@ get ozel_yakala(<span style="background-color:hsla(0,100%,50%,0.05)"><span style
 </div>
 </div>
 
-<p>You can also set options per template language in general:</p>
+<p>
+    İsterseniz template dili bazında da seçenekleri belirleyebilirsiniz. <code>haml</code> için
+    varsayılan formatı örnekteki gibi düzenleyebilirsiniz.
+</p>
 
 <div>
 <div class="CodeRay">
@@ -586,32 +589,42 @@ get <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710
 </div>
 </div>
 
-<p>Options passed to the render method override options set via <code>set</code>.</p>
+<p>
+    <code>set</code> ile varsayılan (<em>default</em>) seçenekleri (<em>options</em>)
+    ezebilirsiniz.
+</p>
 
-<p>Available Options:</p>
+<p>Mevcut Seçenekler (Options):</p>
 
 <dl>
 <dt>locals</dt>
   <dd>
-    List of locals passed to the document. Handy with partials.
-    Example: <tt>erb "&lt;%= foo %&gt;", :locals =&gt; {:foo =&gt; "bar"}</tt>
+    Özellikle <strong>partials</strong> kullanırken çok işe yarayan,
+    ilgili şablon bloğuna parametre geçirmeyen yarayan değişkendir.
+    Örnek: <tt>erb "&lt;%= isim %&gt;", :locals =&gt; {:isim =&gt; "Ali"}</tt>
   </dd>
 
   <dt>default_encoding</dt>
   <dd>
-    String encoding to use if uncertain. Defaults to
-    <tt>settings.default_encoding</tt>.
+    Tekstlerin (String'lerin) encoding tipi/türü için kullanılır. Varsayılan değer
+    <tt>settings.default_encoding</tt> değişkenindedir.
   </dd>
 
   <dt>views</dt>
   <dd>
-    Views folder to load templates from. Defaults to <tt>settings.views</tt>.
+    Template'ların (Şablonların) yüklendiği dizindir. Varsayılan değer
+    <tt>settings.views</tt> değişkenindedir.
   </dd>
 
   <dt>layout</dt>
   <dd>
-    Whether to use a layout (<tt>true</tt> or <tt>false</tt>). If it's a Symbol, specifies
-    what template to use. Example: <tt>erb :index, :layout =&gt; !request.xhr?</tt>
+      Duruma göre template'ları bir render etmek için ana şablon kullanmak
+      ya da kullanmamak için (<tt>true</tt> ya da <tt>false</tt>) değerleri
+      verilir. Eğer Symbol verilmişse ilgili template render edilir. Yani
+      <tt>erb :index, :layout => :sayfa2</tt> gibi bir ifade olursa, <tt>views/sayfa2.erb</tt>
+      dosyası kullanılarak <tt>index.erb</tt> render edilir. Eğer Ajax isteği olursa
+      layout'u <tt>false</tt> yapmak için: <tt>erb :index, :layout =&gt; !request.xhr?</tt>
+      kullanılabilir.
   </dd>
 
   <dt>content_type</dt>
